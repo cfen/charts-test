@@ -31,3 +31,11 @@
 }
 
 
+.legend{
+	text{
+		@include fs-header(3); 
+		fill: #666;
+		
+	}
+}
+

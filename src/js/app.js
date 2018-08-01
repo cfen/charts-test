@@ -15,7 +15,7 @@ import * as d3Time from 'd3-time'
 
 var maxDataVal;
 
-const chartColors = { lhsColor:"#FFE501", rhsColor:"#02B7FF", axisColor: "#CCC", labelColor:"#222"}
+const chartColors = { lhsColor:"#02B7FF", rhsColor:"#02B7FF", axisColor: "#CCC", labelColor:"#222"}
 
 loadJson("https://interactive.guim.co.uk/docsdata-test/1OK4iKZwounIniO0ZOL-rp_Q5AkPmts4LK1gicT6JtyU.json")
       .then((data) => {
@@ -51,15 +51,12 @@ let setData = function(players){
 }
 
 let buildBuyView = function(dataObj,idAppend){
-		
-
-		buildPairChart(dataObj.premInsPosition, dataObj.premOutsPosition, document.getElementById("graphicOne-"+idAppend))
-		buildPairChart(dataObj.oldLeagueGroup, dataObj.newLeagueGroup, document.getElementById("graphicTwo-"+idAppend))
-		buildPairChart(dataObj.premInsNation, dataObj.premOutsNation, document.getElementById("graphicThree-"+idAppend))
-
+		buildPairChart(dataObj.premInsPosition, dataObj.premOutsPosition, document.getElementById("graphicOne-"+idAppend),idAppend,"by position")
+		buildPairChart(dataObj.oldLeagueGroup, dataObj.newLeagueGroup, document.getElementById("graphicTwo-"+idAppend),idAppend,"by previous league")
+		buildPairChart(dataObj.premInsNation, dataObj.premOutsNation, document.getElementById("graphicThree-"+idAppend),idAppend,"by nationality")
 }
 
-let buildPairChart = function(dIn, dOut, tgtSvg){
+let buildPairChart = function(dIn, dOut, tgtSvg, leagueID, chartTitle){
 
 	console.log("build",dIn,dOut)
 
@@ -74,23 +71,35 @@ let buildPairChart = function(dIn, dOut, tgtSvg){
             top: 60,
             right: 25,
             bottom: 0,
-            left: 60
+            left: 0
         };
 
         var width = 820 - margin.left - margin.right,
-            height = dIn.length*heightUnit + margin.top + margin.bottom; //good
-
+            //height = (dIn.length*heightUnit) + margin.top + margin.bottom; //good
+            height = 500;
         var svg = d3Select.select(tgtSvg).append("svg") 
             .attr("width", width + margin.left + margin.right)
             .attr("height", height)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); //good
 
+        var legend = svg.append("g")
+		    .attr('class', 'legend')
+		    .attr('width', width)
+		    .attr('height', 20)
+		    .attr('transform', 'translate(0,0)');
+
+		legend.append('text')
+		    .attr('x', 0)
+		    .attr('y', 0)
+		    .text(chartTitle);
+
         var chartWidth = width/2;
         var chartHeight = (dIn.length * heightUnit);
         chartPl = chartWidth;
 
         var g = svg.append("g")
+        	.attr('class', 'chartRight')
 	        .attr("width", chartWidth)
 			.attr("transform", "translate("+ chartPl + "," +0+ ")");
 
@@ -101,15 +110,12 @@ let buildPairChart = function(dIn, dOut, tgtSvg){
 	    y.domain(dIn.map(function(d) { return d.sortOn; })).padding(0.1);
 
 	    g.append("g")
-	        .attr("class", "x axis")
-	       	.attr("transform", "translate(0," + height + ")")
-	      	.call(d3Axis.axisBottom(x).ticks(5).tickFormat(function(d) { return parseInt(d / 1000); }).tickSizeInner([-height]));
-
-	    g.append("g")
 	        .attr("class", "y axis")
-	        .call(d3Axis.axisLeft(y));
+	        //.call(d3Axis.axisRight(y).tickSizeInner((chartWidth-10)));
 
-	    g.selectAll(".bar")
+	    var barsGroup =  g.append("g")
+	    	.attr("transform", "translate(0," + margin.top + ")")  
+	    barsGroup.selectAll(".bar")
 	        .data(dIn)
 	      .enter().append("rect")
 	        .attr("class", "bar")
@@ -121,63 +127,39 @@ let buildPairChart = function(dIn, dOut, tgtSvg){
 	        .attr("y", function(d) { return y(d.sortOn); })
 	        .attr("width", function(d) { return x(d.total); })
 
-		// var x = d3.scaleLinear().range([0, width]);
-		// var x1 = d3Scale.scaleLinear().range([chartWidth, 0  ]);
-		// var y = d3Scale.scaleBand().range([chartHeight, 0]);		
-
-        //x1.domain([0, maxPrice]); 
-
-     //    console.log(d3Array.max(dIn, function(d) { return d.total; }))
-     //    x1.domain([0, d3Array.max(dIn, function(d) { return d.total; })]);
-    	// y.domain(dIn.map(function(d) { return d.sortOn; })).padding(0.1);
-
-     //  	g.append("g")
-	    //   .attr("class", "y axis")
-	    //   .call(d3Axis.axisRight(y).tickSize(0));
-      	
-     //    g.selectAll(".bar")
-	    //     .data(dIn)
-	    //   .enter().append("rect")
-	    //     .attr("class", "bar")
-	    //     .attr("data-id", function(d) { return d.sortOn; })
-	    //     .attr("data-val", function(d) { return d.total; })
-	    //     .attr("fill", chartColors.rhsColor)
-	    //     .attr("x", 1)
-	    //     .attr("width", function(d) { return x1(d.total); })
-	    //     .attr("height", y.bandwidth())
-	    //     .attr("y", function(d) { return y(d.sortOn); });
-
 	    g.append("g")
-        .attr("class", "x axis")
-       	.attr("transform", "translate(0," + height + ")")
-      	.call(d3Axis.axisBottom(x).ticks(2).tickFormat(function(d) { return d.sortOn; }).tickSizeInner([-height]));
+	        .attr("class", "x axis")
+	       	.attr("transform", "translate(0," + 18 + ")")
+	      	.call(d3Axis.axisTop(x).ticks(3).tickFormat(function(d) { return parseInt(d / 1000000); }).tickSizeInner([-(height-10)]));
 
 	     chartPl = 0;
 
 	     // new x set up for 2nd dataset
-	     var x2 = d3Scale.scaleLinear().range([chartWidth, 0  ]);	
-	     x2.domain([maxDataVal, 0 ]);
+	     var x2 = d3Scale.scaleLinear().range([0, chartWidth  ]);	
+	     x2.domain([0, maxDataVal]);
 
 	     var gLeft = svg.append("g")
 	        .attr("width", chartWidth)
 			.attr("transform", "translate("+ chartPl + "," + 0 + ")");
 
-		gLeft.selectAll(".bar")
+		var barsGroup =  gLeft.append("g")
+	    	.attr("transform", "translate(0," + margin.top + ")")  
+	    barsGroup.selectAll(".bar")
 	        .data(dOut)
 	      .enter().append("rect")
 	        .attr("class", "bar")
 	        .attr("data-id", function(d) { return d.sortOn; })
 	        .attr("data-val", function(d) { return d.total; })
 	        .attr("fill", chartColors.lhsColor)
-	        .attr("x", function(d) { return chartWidth - x2(d.total) - 1;})
-	        .attr("width", function(d) {  return x2(d.total); })
+	        .attr("x", function(d) { return chartWidth - x(d.total) - 1;})
+	        .attr("width", function(d) {  return x(d.total); })
 	        .attr("height", y.bandwidth())
 	        .attr("y", function(d) { return y(d.sortOn); });	
 
 	    gLeft.append("g")
 	        .attr("class", "x axis")
-	       	.attr("transform", "translate(0," + height + ")")
-	      	.call(d3Axis.axisBottom(x2).ticks(2).tickFormat(function(d) { return d.sortOn; }).tickSizeInner([-height]).tickFormat(function (d,k) { return k 	}) ); 
+	       	.attr("transform", "translate(0," + 18 + ")")
+	      	.call(d3Axis.axisTop(x2).ticks(3).tickFormat(function(d) { return parseInt(d / 1000000); }).tickSizeInner([-(height-10)]));
 	}
 
 

@@ -2,27 +2,21 @@ import Handlebars from 'handlebars/dist/handlebars'
 
 import mainTemplate from "./src/templates/main.html!text"
 
-const clubs = ["Arsenal","Bournemouth","Brighton","Burnley","Cardiff_City","Chelsea","Crystal_Palace","Everton","Fulham","Huddersfield_Town","Leicester_City","Liverpool","Manchester_City","Manchester_United","Newcastle_United","Southampton","Tottenham_Hotspur","Watford","West_Ham_United","Wolverhampton_Wanderers"];
+import chartTemplate from "./src/templates/chartTemplate.html!text"
 
+const premClubs = ["Arsenal","Bournemouth","Brighton","Burnley","Cardiff_City","Chelsea","Crystal_Palace","Everton","Fulham","Huddersfield_Town","Leicester_City","Liverpool","Manchester_City","Manchester_United","Newcastle_United","Southampton","Tottenham_Hotspur","Watford","West_Ham_United","Wolverhampton_Wanderers"];
+
+const reqLeagues = ["Premier League","Serie A","La Liga","Ligue 1","Bundesliga"];
+
+const chartSet = [{chartTitle: "position", fiveBar: true, tenBar: false},{chartTitle: "league", fiveBar: false, tenBar: true},{chartTitle: "nation", fiveBar: false, tenBar: true}]
 
 export async function render() {
+	let dataObj = {};
+	dataObj.objArr = buildObject(reqLeagues);
+	console.log(dataObj)
+	let html = compileHTML(dataObj);
 
-	let teamObj = {};
-
-	teamObj.objArr = buildObject(clubs);
-
-	console.log(teamObj)
-
-	let html = compileHTML(teamObj);
-
-	// let newObj = {}
-
-	// newObj.clubs = clubs;
-
- //    // this function just has to return a string of HTML
- //    // you can generate this using js, e.g. using Mustache.js
-
- return html;
+    return html;
 
 }
 
@@ -31,6 +25,10 @@ function compileHTML(dataIn) {
     Handlebars.registerHelper('html_decoder', function(text) {
         var str = unescape(text).replace(/&amp;/g, '&');
         return str;
+    });
+
+    Handlebars.registerPartial({
+        'chartTemplate': chartTemplate
     });
 
     var content = Handlebars.compile(
@@ -48,7 +46,6 @@ function compileHTML(dataIn) {
 
 function buildObject(obj) {
     let keys = Object.keys(obj), i, len = keys.length;
-
     //keys.sort();
 
     var a = []
@@ -58,9 +55,20 @@ function buildObject(obj) {
         let t = {}
         t.sortOn = k;
         t.teamName = obj[k];
+        t.teamNameID = t.teamName.split(" ").join("").toLowerCase();
         t.teamNameDisplay = t.teamName.split("_").join(" ");
+        t.chartsArr = chartSet;
+
         a.push(t);
     }
 
     return a;
 }
+
+
+
+
+
+
+
+

@@ -42,7 +42,8 @@ export function createLeagueObject(players, leagueSelector){
 		tempObj.premOutsNation = getOutsArray( tempObj.premInsNation, tempObj.premOutsNation )
 
 		// can't use getOutsArray function for leagues 
-		//tempObj.newLeagueGroup = getOutsArray( tempObj.oldLeagueGroup, tempObj.newLeagueGroup )
+		// tempObj.newLeagueGroup = getOutsArray( tempObj.oldLeagueGroup, tempObj.newLeagueGroup )
+
 		var tempArr = [];
 		tempArr.length = 10;
 		tempObj.oldLeagueGroup.forEach((obj,k) => {
@@ -54,6 +55,7 @@ export function createLeagueObject(players, leagueSelector){
 		});
 		tempObj.newLeagueGroup = tempArr;
 		// end can't use getOutsArray for leagues 
+
 		return tempObj;
 }
 
@@ -61,14 +63,15 @@ export function createLeagueObject(players, leagueSelector){
 let getOutsArray = function(insArr, outsArr){
 	var tempArr = [];
 	tempArr.length = insArr.length;
-	
+
 		insArr.forEach((obj,k) => {
-				var ob;
-				var sortStr = obj.sortOn;
-				ob = outsArr.find(function (ob) { return ob.sortOn === sortStr; });
-				if(!ob){ ob = {sortOn: sortStr, objArr:[], total:0} ;}
-				tempArr[k] = ob;
+			var ob;
+			var sortStr = obj.sortOn;
+			ob = outsArr.find(function (ob) { return ob.sortOn === sortStr; });
+			if(!ob){ ob = {sortOn: sortStr, objArr:[], total:0} ;}
+			tempArr[k] = ob;
 		});
+
 	return tempArr;
 }
 
@@ -94,6 +97,7 @@ let addDataSort = function(arrIn, outputVal, numVal){
 
 	tempArr.sort(function (a, b) { return b.total - a.total; });
 
+
 	if (outputVal == 'position'){ 
 		var tempArrTwo = [ ];
 
@@ -109,7 +113,10 @@ let addDataSort = function(arrIn, outputVal, numVal){
 
 	}
 
+	console.log(maxDataValTemp)
+
 	return tempArr;
+
 }
 
 

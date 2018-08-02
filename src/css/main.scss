@@ -1,6 +1,7 @@
 @import "mq";
 @import "fonts";
 @import "palette";
+// @import "chart";
 // Uncomment for embeds
 //@import "embed";
 // Uncomment for full screen (including immersive article main media)
@@ -12,9 +13,17 @@
 
 .team-slice-wrapper{
 	width:100%;
-
+	min-height:300px;
 	.team-main-col{
 		height:auto;
+
+		@include mq(leftCol){
+			margin-left:160px;
+		}
+		
+		@include mq(wide){
+			margin-left:240px;
+		}
 	}
 }
 
@@ -39,3 +48,55 @@
 	}
 }
 
+.js-graph{
+	color: rgb(118, 118, 118); 
+	font-family: 'Guardian Text Sans Web', Helvetica, Arial, 'Lucida Grande', sans-serif; 
+	font-size: 14px; 
+	border-top: 1px solid rgb(220, 220, 220); 
+	border-bottom: 1px solid rgb(220, 220, 220); 
+	padding-bottom: 4px; 
+	width: 50%;
+}
+
+.js-text{
+	 display: inline-block; vertical-align: 
+	 top; color: rgb(51, 51, 51); 
+	 line-height: 18px; 
+	 @include fs-textSans(3); 
+	 width: 100%;
+}
+
+.js-chart-head{
+	 color: black; 
+	 font-family: 'Guardian Egyptian Web', Georgia, serif; 
+	 font-weight: 600; 
+	 font-size: 18px; 
+	 line-height: 24px; 
+	 margin-bottom: 12px;
+}
+
+.js-bars{
+	position: relative; 
+	width: 100%; 
+	height: 24px; 
+	display: block;
+}
+
+
+.js-chart-value-bar{
+	position: absolute;
+	top:0;
+	background-color: rgb(204, 10, 17); 
+	margin-bottom: 2px; 
+	height: 16px; 
+
+	&.right{
+		left: 50%; 
+	}
+	
+
+	&.left{
+		background-color: #FC0; 
+		right: 50%; 
+	}
+}

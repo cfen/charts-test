@@ -89,6 +89,7 @@ let addDataSort = function(arrIn, outputVal, numVal){
 			o.sortOn = k
 			o.objArr = arr;
 			o.total = arr.map(item => item[numVal]).reduce((prev, next) => prev + next);
+			o.niceTotal = (o.total/1000000000)*1000;
 
 			if (o.total > maxDataValTemp){ maxDataValTemp = o.total } // set max value for charts here
 
@@ -113,14 +114,48 @@ let addDataSort = function(arrIn, outputVal, numVal){
 
 	}
 
-	console.log(maxDataValTemp)
-
 	return tempArr;
 
 }
 
 
+export function getPcVals(tempObj,maxDataVal){
+
+	tempObj.oldLeagueGroup.forEach((obj,k) => { 
+		obj.pcVal = Math.round((obj.total/maxDataVal)*100);
+	});
+
+	tempObj.newLeagueGroup.forEach((obj,k) => { 
+		obj.pcVal = Math.round((obj.total/maxDataVal)*100);
+	});
+
+	tempObj.premInsPosition.forEach((obj,k) => { 
+		obj.pcVal = Math.round((obj.total/maxDataVal)*100);
+	});
+
+	tempObj.premOutsPosition.forEach((obj,k) => { 
+		obj.pcVal = Math.round((obj.total/maxDataVal)*100);
+	});
+
+	tempObj.premInsNation.forEach((obj,k) => { 
+		obj.pcVal = Math.round((obj.total/maxDataVal)*100);
+	});
+
+	tempObj.premOutsNation.forEach((obj,k) => { 
+		obj.pcVal = Math.round((obj.total/maxDataVal)*100);
+		
+	});
+
+	return tempObj;
+}
+
+
 
 export function maxDataValParsed(){
+	
+	maxDataValTemp = Math.ceil(maxDataValTemp/100000000);
+
+	maxDataValTemp = maxDataValTemp*100000000;
+	console.log("maxDataValTemp",maxDataValTemp);
 	return maxDataValTemp;
 }

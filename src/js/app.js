@@ -7,7 +7,7 @@ var maxDataVal;
 loadJson("https://interactive.guim.co.uk/docsdata-test/1OK4iKZwounIniO0ZOL-rp_Q5AkPmts4LK1gicT6JtyU.json")
       .then((data) => {
 	  	let dataObj = setData(data.sheets.Transfers);
-	  	buildBuyView(dataObj);
+	  	console.log(dataObj);
  })
 
 let setData = function(players){
@@ -32,18 +32,19 @@ let setData = function(players){
 		premObj = getPcVals(premObj,maxDataVal);
 		laligaObj = getPcVals(laligaObj,maxDataVal);
 
-		buildBuyView(premObj,"premierleague");
-		buildBuyView(laligaObj,"laliga");
+		//buildBuyView(premObj,"premierleague");
 		//buildBuyView(laligaObj,"laliga");
-		// buildBuyView(serieObj,"seriea");
-		// buildBuyView(serieObj,"ligue1");
-		// buildBuyView(serieObj,"bundesliga");
+		//buildBuyView(laligaObj,"laliga");
+		//buildBuyView(serieObj,"seriea");
+		//buildBuyView(serieObj,"ligue1");
+		//buildBuyView(serieObj,"bundesliga");
 
 		addAxisVals();
 }
 
 
 let buildBuyView = function(dataObj,idAppend){
+	
 	console.log(dataObj,idAppend);
 
 	dataObj.premOutsPosition.forEach((o,k) =>{

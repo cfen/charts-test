@@ -1,17 +1,19 @@
 <div class="interactive-wrapper">
 	{{#each objArr}}​	
-       <div class="team-slice-wrapper team-slice--{{sortOn}}--{{ref}}" data-team="{{teamName}}">
+       <div class="team-slice-wrapper team-slice--{{sortOn}}--{{ref}}" data-team="{{teamNameDisplay}}">
              <div class="team-slice-container">
-                {{#each chartsArr}}​
+                
                   <div class="team-left-col">
-        				        <!--   <h2>{{teamNameDisplay}}</h2> -->
+        				          <h2>{{teamNameDisplay}}</h2>
                   </div>	
-
-                 	<div class="team-main-col" data-team="{{teamName}}">
-                        {{>chartTemplate}}
+                
+                 	<div class="team-main-col" data-team="{{sortOn}}">
+                    {{#each chartsArr}}​
+                        {{>chartTemplate}} 
+                    {{/each}}
                  	</div>
            	  </div>
-            {{/each}}
+           
         </div>
     {{/each}}
 </div>

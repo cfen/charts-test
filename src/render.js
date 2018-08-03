@@ -6,14 +6,33 @@ import chartTemplate from "./src/templates/chartTemplate.html!text"
 
 const premClubs = ["Arsenal","Bournemouth","Brighton","Burnley","Cardiff_City","Chelsea","Crystal_Palace","Everton","Fulham","Huddersfield_Town","Leicester_City","Liverpool","Manchester_City","Manchester_United","Newcastle_United","Southampton","Tottenham_Hotspur","Watford","West_Ham_United","Wolverhampton_Wanderers"];
 
-const reqLeagues = ["Premier League","Serie A","La Liga","Ligue 1","Bundesliga"];
+const reqLeaguesArr = [{displayTitle:"Premier League", leagueId:"premierleague"},
+                        {displayTitle:"Serie A", leagueId:"seriea"},
+                        {displayTitle:"La Liga", leagueId:"laliga"},
+                        {displayTitle:"Ligue 1", leagueId:"ligue1"},
+                        {displayTitle:"Bundesliga", leagueId:"bundesliga"}];
 
-const chartSet = [{chartTitle: "position", fiveBar: true, tenBar: false},{chartTitle: "league", fiveBar: false, tenBar: true},{chartTitle: "nation", fiveBar: false, tenBar: true}]
+
+const reqCharts = ["position", "league", "nation"]
+
+const chartArr = [{chartTitle: "position", fiveBar: true, tenBar: false, reqLeagues: reqLeaguesArr},{chartTitle: "league", fiveBar: false, tenBar: true, reqLeagues: reqLeaguesArr},{chartTitle: "nation", fiveBar: false, tenBar: true, reqLeagues: reqLeaguesArr}]
 
 export async function render() {
 	let dataObj = {};
-	dataObj.objArr = buildObject(reqLeagues);
-	console.log(dataObj)
+
+    dataObj.objArr = [];
+
+    reqCharts.forEach((o,k) =>{
+        dataObj.objArr.push(buildObject(o,k))
+    })
+    
+    dataObj.objArr.forEach((o,k) =>{
+
+        // console.log(o.teamNameID)
+        // console.log(o.chartsArr)
+    })
+
+
 	let html = compileHTML(dataObj);
 
     return html;
@@ -22,6 +41,7 @@ export async function render() {
 
 
 function compileHTML(dataIn) {
+
     Handlebars.registerHelper('html_decoder', function(text) {
         var str = unescape(text).replace(/&amp;/g, '&');
         return str;
@@ -44,25 +64,25 @@ function compileHTML(dataIn) {
 }
 
 
-function buildObject(obj) {
-    let keys = Object.keys(obj), i, len = keys.length;
-    //keys.sort();
 
-    var a = []
 
-    for (i = 0; i < len; i++) {
-        let k = keys[i];
-        let t = {}
-        t.sortOn = k;
-        t.teamName = obj[k];
-        t.teamNameID = t.teamName.split(" ").join("").toLowerCase();
-        t.teamNameDisplay = t.teamName.split("_").join(" ");
-        t.chartsArr = chartSet;
+function buildObject(o,k) {
+        
 
-        a.push(t);
-    }
+        if(k===0){ console.log(k,"position")}
+        if(k===1){ console.log(k,"league")}
+        if(k===2){ console.log(k,"nation")}
 
-    return a;
+
+        var t = {}
+        var s = o;
+        t.sortOn = o;
+        t.teamNameID = s.split(" ").join("").toLowerCase();
+        t.chartsArr = reqLeaguesArr;
+        t.chartsArr.every((item,k) => item.parentId = t.teamNameID);
+   
+        return t;
+
 }
 
 

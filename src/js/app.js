@@ -6,11 +6,13 @@ var maxDataVal;
 
 loadJson("https://interactive.guim.co.uk/docsdata-test/1OK4iKZwounIniO0ZOL-rp_Q5AkPmts4LK1gicT6JtyU.json")
       .then((data) => {
-	  	let dataObj = setData(data.sheets.Transfers);
-	  	console.log(dataObj);
+
+	setData(data.sheets.Transfers);
+	  	
  })
 
 let setData = function(players){
+	console.log("dataObj", players);
 		players.forEach((player,k) => {
 			player.prevClub = player['What was the previous club?'];
 			player.newClub = player['What is the new club?'];
@@ -28,34 +30,63 @@ let setData = function(players){
 		let premObj = createLeagueObject(players, "Premier League")
 		maxDataVal = maxDataValParsed(); //run this after most expensive league - can be done intelligently by comparing with a temp val after each league		
 		let laligaObj = createLeagueObject(players, "Ligue 1");
+		let serieaObj = createLeagueObject(players, "Serie A");
+		let ligue1Obj = createLeagueObject(players, "Ligue 1");
+		let bundesligaObj = createLeagueObject(players, "Bundesliga");
 
 		premObj = getPcVals(premObj,maxDataVal);
 		laligaObj = getPcVals(laligaObj,maxDataVal);
+		serieaObj = getPcVals(serieaObj,maxDataVal);
+		ligue1Obj = getPcVals(ligue1Obj,maxDataVal);
+		bundesligaObj = getPcVals(bundesligaObj,maxDataVal);
 
-		//buildBuyView(premObj,"premierleague");
-		//buildBuyView(laligaObj,"laliga");
-		//buildBuyView(laligaObj,"laliga");
-		//buildBuyView(serieObj,"seriea");
-		//buildBuyView(serieObj,"ligue1");
-		//buildBuyView(serieObj,"bundesliga");
+		console.log(premObj)
+
+		buildBuyView(premObj,"premierleague");
+		buildBuyView(laligaObj,"laliga");
+		buildBuyView(serieaObj,"seriea");
+		buildBuyView(ligue1Obj,"ligue1");
+		buildBuyView(bundesligaObj,"bundesliga");
 
 		addAxisVals();
 }
 
 
 let buildBuyView = function(dataObj,idAppend){
-	
-	console.log(dataObj,idAppend);
 
 	dataObj.premOutsPosition.forEach((o,k) =>{
-		document.getElementById(idAppend+"_position"+"_lhBar_"+k).style.width=(o.pcVal/2)+"%"; //charts are 50% of width so half the value 
-		document.getElementById(idAppend+"_position"+"_BarTitle_"+k).innerHTML = getBarTitleStr(o.sortOn, o.niceTotal);  //premierleague_position_BarTitle_0
+		console.log("tgt", o,k);
+		document.getElementById("position_"+idAppend+"_lhBar_"+k).style.width=(o.pcVal/2)+"%"; //charts are 50% of width so half the value 
+		document.getElementById("position_"+idAppend+"_BarTitle_"+k).innerHTML = getBarTitleStr(o.sortOn, o.niceTotal);  //premierleague_position_BarTitle_0
 	})	
 
 	dataObj.premInsPosition.forEach((o,k) =>{
-		document.getElementById(idAppend+"_position"+"_rhBar_"+k).style.width=(o.pcVal/2)+"%"; //charts are 50% of width so half the value 
-		document.getElementById(idAppend+"_position"+"_BarTitle_"+k).innerHTML += " <span class='money-out'>"+(o.niceTotal)+"m out</span>";  //premierleague_position_BarTitle_0
+		document.getElementById("position_"+idAppend+"_rhBar_"+k).style.width=(o.pcVal/2)+"%"; //charts are 50% of width so half the value 
+		document.getElementById("position_"+idAppend+"_BarTitle_"+k).innerHTML += " <span class='money-out'>"+(o.niceTotal)+"m out</span>";  //premierleague_position_BarTitle_0
 	})
+
+
+	dataObj.newLeagueGroup.forEach((o,k) =>{
+		document.getElementById("league_"+idAppend+"_lhBar_"+k).style.width=(o.pcVal/2)+"%"; //charts are 50% of width so half the value 
+		document.getElementById("league_"+idAppend+"_BarTitle_"+k).innerHTML = getBarTitleStr(o.sortOn, o.niceTotal);  //premierleague_position_BarTitle_0
+	})	
+
+	dataObj.oldLeagueGroup.forEach((o,k) =>{
+		document.getElementById("league_"+idAppend+"_rhBar_"+k).style.width=(o.pcVal/2)+"%"; //charts are 50% of width so half the value 
+		document.getElementById("league_"+idAppend+"_BarTitle_"+k).innerHTML += " <span class='money-out'>"+(o.niceTotal)+"m out</span>";  //premierleague_position_BarTitle_0
+	})
+
+	dataObj.premOutsNation.forEach((o,k) =>{
+		document.getElementById("nation_"+idAppend+"_lhBar_"+k).style.width=(o.pcVal/2)+"%"; //charts are 50% of width so half the value 
+		document.getElementById("nation_"+idAppend+"_BarTitle_"+k).innerHTML = getBarTitleStr(o.sortOn, o.niceTotal);  //premierleague_position_BarTitle_0
+	})	
+
+	dataObj.premInsNation.forEach((o,k) =>{
+		document.getElementById("nation_"+idAppend+"_rhBar_"+k).style.width=(o.pcVal/2)+"%"; //charts are 50% of width so half the value 
+		document.getElementById("nation_"+idAppend+"_BarTitle_"+k).innerHTML += " <span class='money-out'>"+(o.niceTotal)+"m out</span>";  //premierleague_position_BarTitle_0
+	})
+
+
 }
 
 let addAxisVals = function(){

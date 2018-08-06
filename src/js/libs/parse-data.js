@@ -31,13 +31,13 @@ export function createLeagueObject(players, leagueSelector){
 		tempObj.nationsGroup = groupBy(premIns, transfer => transfer.nation);
 
 		tempObj.oldLeagueGroup.sort(function (a, b) { return b.total - a.total; });
-		tempObj.oldLeagueGroup.length = 10;
+		tempObj.oldLeagueGroup.length = 5;
 		tempObj.oldLeagueGroup.sort(function (a, b) { return b.total - a.total; });
-		tempObj.oldLeagueGroup.reverse();
+		//tempObj.oldLeagueGroup.reverse();
 
 		tempObj.premInsNation.sort(function (a, b) { return b.total - a.total; });
-		tempObj.premInsNation.length = 10;
-		tempObj.premInsNation.reverse();
+		tempObj.premInsNation.length = 5;
+		//tempObj.premInsNation.reverse();
 
 		tempObj.premOutsNation = getOutsArray( tempObj.premInsNation, tempObj.premOutsNation )
 
@@ -45,7 +45,7 @@ export function createLeagueObject(players, leagueSelector){
 		// tempObj.newLeagueGroup = getOutsArray( tempObj.oldLeagueGroup, tempObj.newLeagueGroup )
 
 		var tempArr = [];
-		tempArr.length = 10;
+		tempArr.length = 5;
 		tempObj.oldLeagueGroup.forEach((obj,k) => {
 			var sortStr = obj.sortOn;
 			var ob = tempObj.newLeagueGroup.find(function (ob) { return ob.sortOn === sortStr; });
@@ -89,7 +89,9 @@ let addDataSort = function(arrIn, outputVal, numVal){
 			o.sortOn = k
 			o.objArr = arr;
 			o.total = arr.map(item => item[numVal]).reduce((prev, next) => prev + next);
-			o.niceTotal = (o.total/1000000000)*1000;
+			o.niceTotal = (o.total/1000000000)*100000;
+			o.niceTotal = Math.round(o.niceTotal)
+			o.niceTotal = o.niceTotal/100;
 
 			if (o.total > maxDataValTemp){ maxDataValTemp = o.total } // set max value for charts here
 

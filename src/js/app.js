@@ -99,7 +99,7 @@ let getBarTitleStr = function(s, total){
 	
 	if(s === "GK"){s = "Goalkeepers"}
 	if(s === "D"){s = "Defenders"}
-	if(s === "M"){s = "Midielders"}
+	if(s === "M"){s = "Midfielders"}
 	if(s === "W"){s = "Wingers"}
 	if(s === "F"){s = "Forwards"}
 
